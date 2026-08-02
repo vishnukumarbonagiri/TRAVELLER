@@ -6,7 +6,10 @@ from pdf_generator import create_pdf
 from maps import create_map_link
 
 
+# ==========================================
 # PAGE CONFIG
+# ==========================================
+
 st.set_page_config(
     page_title="TRAVELLER",
     page_icon="🌍",
@@ -14,7 +17,10 @@ st.set_page_config(
 )
 
 
+# ==========================================
 # CSS
+# ==========================================
+
 st.markdown("""
 <style>
 
@@ -40,11 +46,16 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+
+# ==========================================
 # BANNER
+# ==========================================
+
 st.image(
     "banner2.png",
     use_container_width=True
 )
+
 
 st.markdown("# 🌍 Welcome to TRAVELLER")
 
@@ -55,19 +66,29 @@ st.write(
 st.divider()
 
 
+
+# ==========================================
 # MAIN LAYOUT
+# ==========================================
+
 left, right = st.columns([1,2])
 
 
+
+# ==========================================
 # LEFT PANEL
+# ==========================================
+
 with left:
 
     st.subheader("🧳 Plan Your Trip")
+
 
     destination = st.text_input(
         "📍 Destination",
         placeholder="Paris"
     )
+
 
     days = st.number_input(
         "📅 Number of Days",
@@ -76,10 +97,12 @@ with left:
         value=5
     )
 
+
     budget = st.text_input(
         "💰 Budget",
         placeholder="$2000"
     )
+
 
     interests = st.text_input(
         "🎯 Interests",
@@ -93,16 +116,21 @@ with left:
 
 
 
+# ==========================================
 # RIGHT PANEL
+# ==========================================
+
 with right:
 
     if generate:
 
 
         # IMAGE
+
         image = get_destination_image(destination)
 
         if image:
+
             st.image(
                 image,
                 caption=destination,
@@ -110,33 +138,42 @@ with right:
             )
 
 
+
         # WEATHER
+
         weather = get_weather(destination)
+
 
         if weather:
 
             st.subheader("🌦 Current Weather")
 
+
             w1,w2,w3 = st.columns(3)
+
 
             w1.metric(
                 "🌡 Temperature",
                 f"{weather['main']['temp']}°C"
             )
 
+
             w2.metric(
                 "💧 Humidity",
                 f"{weather['main']['humidity']}%"
             )
+
 
             w3.metric(
                 "💨 Wind",
                 f"{weather['wind']['speed']} m/s"
             )
 
+
             st.write(
                 f"Condition: {weather['weather'][0]['description'].title()}"
             )
+
 
             st.divider()
 
@@ -156,20 +193,24 @@ with right:
 
         st.subheader("🧳 AI Travel Itinerary")
 
-        st.markdown(
-            itinerary,
-            unsafe_allow_html=True
-        )
+
+        with st.container(border=True):
+
+            st.markdown(itinerary)
+
 
 
         st.divider()
+
 
 
         # GOOGLE MAPS
 
         st.subheader("🗺️ Explore Destination")
 
+
         map_link = create_map_link(destination)
+
 
         st.link_button(
             "Open in Google Maps 📍",
@@ -177,7 +218,9 @@ with right:
         )
 
 
+
         st.divider()
+
 
 
         # PDF DOWNLOAD
@@ -188,36 +231,48 @@ with right:
         with open(pdf_file,"rb") as file:
 
             st.download_button(
+
                 label="📄 Download Itinerary PDF",
+
                 data=file,
+
                 file_name="TRAVELLER_itinerary.pdf",
+
                 mime="application/pdf"
+
             )
 
 
+
         st.divider()
+
 
 
         # SUMMARY
 
         st.subheader("📌 Trip Summary")
 
+
         c1,c2,c3,c4 = st.columns(4)
+
 
         c1.metric(
             "📍 Destination",
             destination
         )
 
+
         c2.metric(
             "📅 Days",
             days
         )
 
+
         c3.metric(
             "💰 Budget",
             budget
         )
+
 
         c4.metric(
             "🎯 Interests",
