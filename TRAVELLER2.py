@@ -1,16 +1,30 @@
-import streamlit as st
+import os
 import re
-
-from weather import get_weather
-from pexels import get_destination_image
-from ai_engine import generate_itinerary
-from pdf_generator import create_pdf
-from maps import create_map_link
+import requests
+import streamlit as st
+from dotenv import load_dotenv
+from groq import Groq
 
 
-# ==========================================
-# PAGE CONFIG
-# ==========================================
+# ===========================
+# LOAD KEYS
+# ===========================
+
+load_dotenv()
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+PEXELS_API_KEY = os.getenv("PEXELS_API_KEY")
+
+
+client = Groq(
+    api_key=GROQ_API_KEY
+)
+
+
+
+# ===========================
+# PAGE SETTINGS
+# ===========================
 
 st.set_page_config(
     page_title="THETRAVELLER",
@@ -19,29 +33,17 @@ st.set_page_config(
 )
 
 
-# ==========================================
-# CSS
-# ==========================================
 
-st.markdown("""
+# ===========================
+# CSS
+# ===========================
+
+st.markdown(
+"""
 <style>
 
 .block-container{
     padding-top:1rem;
-}
-
-.stButton>button{
-    width:100%;
-    height:50px;
-    background:#0077b6;
-    color:white;
-    border-radius:10px;
-    font-size:18px;
-    font-weight:bold;
-}
-
-.stButton>button:hover{
-    background:#005f87;
 }
 
 
@@ -49,68 +51,59 @@ st.markdown("""
 
     background:white;
     color:#222;
-    padding:30px;
+    padding:35px;
     border-radius:20px;
     border-left:8px solid #0077b6;
     font-size:18px;
-    line-height:1.7;
+    line-height:1.8;
+
+}
+
+
+.stButton button{
+
+    background:#0077b6;
+    color:white;
+    width:100%;
+    height:50px;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
 
 }
 
 </style>
-""", unsafe_allow_html=True)
-
-
-
-# ==========================================
-# CLEAN AI RESPONSE
-# ==========================================
-
-def clean_response(text):
-
-    # remove html tags
-    text = re.sub(
-        r"<[^>]*>",
-        "",
-        text
-    )
-
-    # remove markdown
-    text = text.replace("#","")
-
-    return text.strip()
-
-
-
-# ==========================================
-# HEADER
-# ==========================================
-
-st.markdown(
-"""
-<h1 style='text-align:center;color:#0077b6;'>
-🌍 THETRAVELLER
-</h1>
 """,
 unsafe_allow_html=True
 )
 
 
+
+# ===========================
+# HEADER
+# ===========================
+
+
 st.markdown(
 """
-<p style='text-align:center;font-size:22px;'>
+<h1 style="text-align:center;color:#0077b6;">
+🌍 THETRAVELLER
+</h1>
+
+<p style="text-align:center;font-size:22px;">
 ✈️ Your intelligent travel companion<br>
 Plan smarter • Explore better • Discover more
 </p>
+
 """,
 unsafe_allow_html=True
 )
 
 
 
-# ==========================================
+# ===========================
 # BANNER
-# ==========================================
+# ===========================
 
 st.image(
     "banner2.png",
@@ -122,17 +115,93 @@ st.divider()
 
 
 
-# ==========================================
-# MAIN AREA
-# ==========================================
+# ===========================
+# CLEAN AI TEXT
+# ===========================
+
+def clean_text(text):
+
+    # remove html
+    text = re.sub(
+        r"<[^>]*>",
+        "",
+        text
+    )
+
+
+    # remove markdown
+    text = text.replace("#","")
+    text = text.replace("*","")
+
+
+    # remove extra spaces
+    text = re.sub(
+        r"\n\s*\n\s*\n+",
+        "\n\n",
+        text
+    )
+
+
+    return text.strip()
+
+
+
+
+
+# ===========================
+# PEXELS IMAGE
+# ===========================
+
+def get_destination_image(destination):
+
+    url = "https://api.pexels.com/v1/search"
+
+
+    headers = {
+
+        "Authorization": PEXELS_API_KEY
+
+    }
+
+
+    params = {
+
+        "query":destination,
+        "per_page":1
+
+    }
+
+
+    response = requests.get(
+        url,
+        headers=headers,
+        params=params
+    )
+
+
+    if response.status_code == 200:
+
+        data=response.json()
+
+        if data["photos"]:
+
+            return data["photos"][0]["src"]["large"]
+
+
+    return None
+
+
+
+
+
+# ===========================
+# INPUT AREA
+# ===========================
+
 
 left,right = st.columns([1,2])
 
 
-
-# ==========================================
-# LEFT SIDE
-# ==========================================
 
 with left:
 
@@ -146,10 +215,10 @@ with left:
 
 
     days = st.number_input(
-        "📅 Number of Days",
-        1,
-        30,
-        5
+        "📅 Days",
+        min_value=1,
+        max_value=30,
+        value=5
     )
 
 
@@ -171,9 +240,12 @@ with left:
 
 
 
-# ==========================================
-# RIGHT SIDE
-# ==========================================
+
+
+# ===========================
+# RESULT AREA
+# ===========================
+
 
 with right:
 
@@ -181,9 +253,21 @@ with right:
     if generate:
 
 
+        if destination == "":
+
+            st.warning(
+                "Please enter destination"
+            )
+
+            st.stop()
+
+
+
         # IMAGE
 
-        image = get_destination_image(destination)
+        image = get_destination_image(
+            destination
+        )
 
 
         if image:
@@ -196,63 +280,103 @@ with right:
 
 
 
-        # WEATHER
 
-        weather = get_weather(destination)
+        # AI PROMPT
 
+        prompt=f"""
 
-        if weather:
+You are a professional travel planner.
 
-            st.subheader("🌦 Current Weather")
+Create a travel itinerary.
 
+RULES:
+- Only plain text.
+- No HTML.
+- No <br>.
+- No markdown.
 
-            a,b,c = st.columns(3)
+Format:
 
-
-            a.metric(
-                "🌡 Temperature",
-                f"{weather['main']['temp']}°C"
-            )
-
-
-            b.metric(
-                "💧 Humidity",
-                f"{weather['main']['humidity']}%"
-            )
+{destination} Travel Plan
 
 
-            c.metric(
-                "💨 Wind",
-                f"{weather['wind']['speed']} m/s"
-            )
+Recommended Hotels:
+
+- Hotel name:
+  Location:
+  Price:
 
 
-            st.write(
-                "Condition:",
-                weather["weather"][0]["description"].title()
-            )
+Food Recommendations:
+
+- Restaurant:
+  Famous food:
 
 
-            st.divider()
+Day 1:
+
+Morning:
+-
+
+Afternoon:
+-
+
+Evening:
+-
 
 
+Transportation:
 
-        # AI
+-
+
+
+Travel Tips:
+
+-
+
+
+Trip Details:
+
+Destination:{destination}
+Days:{days}
+Budget:{budget}
+Interests:{interests}
+
+"""
+
+
 
         with st.spinner(
-            "✈️ Creating your travel itinerary..."
+            "✈️ Creating itinerary..."
         ):
 
-            itinerary = generate_itinerary(
-                destination,
-                days,
-                budget,
-                interests
+
+            response = client.chat.completions.create(
+
+                model="llama-3.3-70b-versatile",
+
+                messages=[
+
+                    {
+                    "role":"user",
+                    "content":prompt
+                    }
+
+                ],
+
+                temperature=0.2
+
             )
 
 
 
-        cleaned = clean_response(itinerary)
+        itinerary = response.choices[0].message.content
+
+
+
+        itinerary = clean_text(
+            itinerary
+        )
 
 
 
@@ -261,99 +385,68 @@ with right:
         )
 
 
+
         st.markdown(
+
             f"""
-            <div class="travel-card">
 
-            {cleaned.replace(chr(10),"<br>")}
+<div class="travel-card">
 
-            </div>
-            """,
-            unsafe_allow_html=True
+<pre style="
+white-space:pre-wrap;
+font-family:Arial;
+color:#222;
+font-size:18px;
+">
+
+{itinerary}
+
+</pre>
+
+</div>
+
+""",
+
+unsafe_allow_html=True
+
         )
+
+
 
 
 
         st.divider()
 
 
-
-        # MAP
-
-        st.subheader(
-            "🗺️ Explore Destination"
-        )
-
-
-        map_link = create_map_link(destination)
-
-
-        st.link_button(
-            "Open in Google Maps 📍",
-            map_link
-        )
-
-
-
-        st.divider()
-
-
-
-        # PDF
-
-        pdf_file = create_pdf(cleaned)
-
-
-        with open(pdf_file,"rb") as file:
-
-
-            st.download_button(
-
-                "📄 Download THETRAVELLER PDF",
-
-                data=file,
-
-                file_name="THETRAVELLER_itinerary.pdf",
-
-                mime="application/pdf"
-
-            )
-
-
-
-        st.divider()
-
-
-
-        # SUMMARY
 
         st.subheader(
             "📌 Trip Summary"
         )
 
 
-        x1,x2,x3,x4 = st.columns(4)
+
+        a,b,c,d = st.columns(4)
 
 
-        x1.metric(
+        a.metric(
             "📍 Destination",
             destination
         )
 
 
-        x2.metric(
+        b.metric(
             "📅 Days",
             days
         )
 
 
-        x3.metric(
+        c.metric(
             "💰 Budget",
             budget
         )
 
 
-        x4.metric(
+        d.metric(
             "🎯 Interests",
             interests
         )

@@ -1,5 +1,9 @@
 import os
+from dotenv import load_dotenv
 from groq import Groq
+
+
+load_dotenv()
 
 
 client = Groq(
@@ -7,82 +11,108 @@ client = Groq(
 )
 
 
+
 def generate_itinerary(destination, days, budget, interests):
 
+
     prompt = f"""
+
 You are a professional travel planner.
 
-Create a travel itinerary.
+Create a detailed travel itinerary.
 
-STRICT RULES:
-- Output ONLY normal text.
-- NEVER write HTML.
-- NEVER use <h1>, <h2>, <div>, <p>, style tags.
-- NEVER use markdown (# symbols).
-- Do not add any code formatting.
+IMPORTANT RULES:
 
-Use this format:
+- Use plain text only.
+- Do NOT use HTML.
+- Do NOT use <br>.
+- Do NOT write paragraphs.
+- Use clear line breaks.
+- Use headings and bullet points.
 
-{destination} Travel Plan
 
-Recommended Hotels:
-- Hotel name:
-- Location:
-- Price:
+FORMAT EXACTLY:
 
-Food Recommendations:
-- Restaurant:
-- Famous food:
 
-Day 1:
+🌍 {destination} Travel Plan
+
+
+🏨 RECOMMENDED HOTELS
+
+Hotel Name:
+Location:
+Price:
+
+
+🍴 FOOD RECOMMENDATIONS
+
+Restaurant:
+Famous Food:
+
+
+📅 DAY 1
+
 Morning:
-Afternoon:
-Evening:
-
-Day 2:
-Morning:
-Afternoon:
-Evening:
-
-Transportation:
 -
 
-Travel Tips:
+Afternoon:
+-
+
+Evening:
+-
+
+
+📅 DAY 2
+
+Morning:
+-
+
+Afternoon:
+-
+
+Evening:
+-
+
+
+🚗 TRANSPORTATION
+
+-
+
+
+💡 TRAVEL TIPS
+
+-
+
+
+💰 ESTIMATED BUDGET
+
 -
 
 
 Trip Details:
+
 Destination: {destination}
 Days: {days}
 Budget: {budget}
 Interests: {interests}
+
 """
 
 
-    result = client.chat.completions.create(
+    response = client.chat.completions.create(
+
         model="llama-3.1-8b-instant",
+
         messages=[
             {
-                "role": "user",
-                "content": prompt
+                "role":"user",
+                "content":prompt
             }
         ],
-        temperature=0.2
+
+        temperature=0
+
     )
 
 
-    text = result.choices[0].message.content
-
-
-    # remove HTML if AI still sends it
-    text = text.replace("<h1>", "")
-    text = text.replace("</h1>", "")
-    text = text.replace("<h2>", "")
-    text = text.replace("</h2>", "")
-    text = text.replace("<div>", "")
-    text = text.replace("</div>", "")
-    text = text.replace("<p>", "")
-    text = text.replace("</p>", "")
-
-
-    return text
+    return response.choices[0].message.content
