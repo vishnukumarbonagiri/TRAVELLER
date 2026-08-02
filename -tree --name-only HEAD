@@ -1,0 +1,23 @@
+[33mdc640ce[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Fresh THETRAVELLER upload
+[33md6bee87[m Fix itinerary formatting and improve UI
+[33mba4fecb[m Fix AI itinerary formatting
+[33m73784af[m Update app.py
+[33m417c240[m Update app.py
+[33mb533475[m Update app.py
+[33mbb0e17e[m Added Dev Container Folder
+[33m613fcab[m Added Pillow dependency
+[33m5c81ac4[m Updated THETRAVELLER AI itinerary and UI
+[33m4b86a1f[m Improved THETRAVELLER itinerary design
+[33m124a52e[m Fixed itinerary display
+[33mbc98bc9[m Improved itinerary formatting
+[33m03bac30[m Added reportlab dependency
+[33mb2da8f1[m Updated THETRAVELLER UI and fixes
+[33m9fbb0f7[m Updated branding to THETRAVELLER
+[33m668acd8[m Improved itinerary display
+[33m799c83f[m Improved AI itinerary formatting
+[33m9568715[m Improved AI itinerary format
+[33m3c5541a[m Added Google Maps integration
+[33mcbb3eb8[m Added PDF download feature
+[33m45b06d6[m Fix weather secrets
+[33mf332746[m Add requirements file
+[33m2d3c46a[m Initial TRAVELLER app
