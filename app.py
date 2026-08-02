@@ -52,16 +52,16 @@ unsafe_allow_html=True
 
 def clean_ai_text(text):
 
-    # remove html tags
+    # Remove HTML tags
     text = re.sub(
         r"<[^>]+>",
         "",
         text
     )
 
-    # remove weird markdown
-    text = text.replace("###","")
-    text = text.replace("**","")
+    # Remove markdown symbols
+    text = text.replace("###", "")
+    text = text.replace("**", "")
 
     return text.strip()
 
@@ -70,7 +70,6 @@ def clean_ai_text(text):
 # ==========================
 # HEADER
 # ==========================
-
 
 st.markdown(
 """
@@ -104,8 +103,7 @@ st.divider()
 # MAIN LAYOUT
 # ==========================
 
-
-left,right = st.columns([1,2])
+left, right = st.columns([1,2])
 
 
 
@@ -114,7 +112,6 @@ left,right = st.columns([1,2])
 # ==========================
 
 with left:
-
 
     st.subheader(
         "🧳 Plan Your Trip"
@@ -157,14 +154,12 @@ with left:
 # RIGHT OUTPUT
 # ==========================
 
-
 with right:
-
 
     if generate:
 
 
-        # IMAGE
+        # Destination image
 
         image = get_destination_image(destination)
 
@@ -179,20 +174,19 @@ with right:
 
 
 
-        # WEATHER
+        # Weather
 
         weather = get_weather(destination)
 
 
         if weather:
 
-
             st.subheader(
                 "🌦 Weather"
             )
 
 
-            c1,c2,c3 = st.columns(3)
+            c1, c2, c3 = st.columns(3)
 
 
             c1.metric(
@@ -217,7 +211,7 @@ with right:
 
 
 
-        # AI GENERATION
+        # AI ITINERARY
 
         with st.spinner(
             "✈️ Creating your itinerary..."
@@ -239,22 +233,32 @@ with right:
 
 
 
-        # DISPLAY
+        # ==========================
+        # FIX LINE BREAKS HERE
+        # ==========================
+
+        formatted_itinerary = itinerary.replace(
+            "\n",
+            "<br><br>"
+        )
+
+
 
         st.subheader(
             "🧳 AI Travel Itinerary"
         )
 
 
+
         st.markdown(
             f"""
 <div class="travel-card">
 
-{itinerary}
+{formatted_itinerary}
 
 </div>
 """,
-unsafe_allow_html=True
+            unsafe_allow_html=True
         )
 
 
@@ -288,7 +292,6 @@ unsafe_allow_html=True
 
         # PDF
 
-
         pdf_file = create_pdf(
             itinerary
         )
@@ -316,7 +319,6 @@ unsafe_allow_html=True
 
 
         # SUMMARY
-
 
         st.subheader(
             "📌 Trip Summary"
