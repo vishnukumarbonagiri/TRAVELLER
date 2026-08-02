@@ -17,14 +17,31 @@ Days: {days}
 Budget: {budget}
 Interests: {interests}
 
-Include:
+Include the following format:
 
-- Day-wise itinerary
+🗓️ Day-wise itinerary
+
+For each day include:
+
+## Day 1
+🏛️ Attractions:
+- Places to visit
+
+🍽️ Food:
+- Restaurants and local dishes
+
+🏨 Hotel:
 - Hotel suggestions
-- Food recommendations
-- Transportation
-- Estimated budget
-- Travel tips
+
+🚗 Transportation:
+- How to move around
+
+
+Also include:
+
+💰 Estimated Budget
+
+💡 Travel Tips
 """
 
     response = client.chat.completions.create(
