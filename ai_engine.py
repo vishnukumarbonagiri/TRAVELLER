@@ -3,6 +3,10 @@ from dotenv import load_dotenv
 from groq import Groq
 
 
+# ==========================
+# LOAD ENV
+# ==========================
+
 load_dotenv()
 
 
@@ -12,50 +16,9 @@ client = Groq(
 
 
 
-def format_itinerary(text):
-
-    # Force line breaks after important sections
-
-    sections = [
-        "🌍",
-        "🏨",
-        "🍴",
-        "📅",
-        "🚗",
-        "💡",
-        "💰",
-        "Trip Details"
-    ]
-
-
-    for section in sections:
-        text = text.replace(
-            section,
-            "\n\n" + section
-        )
-
-
-    # Fix common labels
-
-    text = text.replace(
-        "Morning:",
-        "\nMorning:"
-    )
-
-    text = text.replace(
-        "Afternoon:",
-        "\nAfternoon:"
-    )
-
-    text = text.replace(
-        "Evening:",
-        "\nEvening:"
-    )
-
-
-    return text.strip()
-
-
+# ==========================
+# GENERATE ITINERARY
+# ==========================
 
 def generate_itinerary(destination, days, budget, interests):
 
@@ -64,17 +27,21 @@ def generate_itinerary(destination, days, budget, interests):
 
 You are a professional travel planner.
 
-Create a travel itinerary.
+Create a detailed travel itinerary.
 
-RULES:
+IMPORTANT RULES:
 
 - Plain text only.
-- Use many line breaks.
-- Never create a paragraph.
+- Do NOT use HTML.
+- Do NOT use <br>.
+- Do NOT create long paragraphs.
+- Use clear line breaks.
 - Use headings.
 - Use bullet points.
 
-Format:
+
+FORMAT EXACTLY:
+
 
 🌍 {destination} Travel Plan
 
@@ -95,7 +62,7 @@ Famous Food:
 📅 DAY 1
 
 Morning:
--
+- 
 
 Afternoon:
 -
@@ -116,9 +83,23 @@ Evening:
 -
 
 
+📅 DAY 3
+
+Morning:
+-
+
+Afternoon:
+-
+
+Evening:
+-
+
+
 🚗 TRANSPORTATION
 
 -
+
+
 
 
 💡 TRAVEL TIPS
@@ -126,9 +107,13 @@ Evening:
 -
 
 
+
+
 💰 ESTIMATED BUDGET
 
 -
+
+
 
 
 Trip Details:
@@ -147,8 +132,8 @@ Interests: {interests}
 
         messages=[
             {
-                "role":"user",
-                "content":prompt
+                "role": "user",
+                "content": prompt
             }
         ],
 
@@ -158,10 +143,6 @@ Interests: {interests}
 
 
     result = response.choices[0].message.content
-
-
-    # IMPORTANT FIX
-    result = format_itinerary(result)
 
 
     return result

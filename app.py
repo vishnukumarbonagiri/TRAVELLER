@@ -52,16 +52,42 @@ unsafe_allow_html=True
 
 def clean_ai_text(text):
 
-    # Remove HTML tags
+    # Convert HTML breaks into real line breaks
+    text = re.sub(
+        r"<br\s*/?>",
+        "\n",
+        text,
+        flags=re.IGNORECASE
+    )
+
+
+    # Remove remaining HTML tags
     text = re.sub(
         r"<[^>]+>",
         "",
         text
     )
 
+
     # Remove markdown symbols
-    text = text.replace("###", "")
-    text = text.replace("**", "")
+    text = text.replace(
+        "###",
+        ""
+    )
+
+    text = text.replace(
+        "**",
+        ""
+    )
+
+
+    # Remove extra empty lines
+    text = re.sub(
+        r"\n\s*\n\s*\n+",
+        "\n\n",
+        text
+    )
+
 
     return text.strip()
 
@@ -70,6 +96,7 @@ def clean_ai_text(text):
 # ==========================
 # HEADER
 # ==========================
+
 
 st.markdown(
 """
@@ -113,6 +140,7 @@ left, right = st.columns([1,2])
 
 with left:
 
+
     st.subheader(
         "🧳 Plan Your Trip"
     )
@@ -150,18 +178,22 @@ with left:
 
 
 
+
 # ==========================
 # RIGHT OUTPUT
 # ==========================
 
 with right:
 
+
     if generate:
 
 
-        # Destination image
+        # IMAGE
 
-        image = get_destination_image(destination)
+        image = get_destination_image(
+            destination
+        )
 
 
         if image:
@@ -174,19 +206,22 @@ with right:
 
 
 
-        # Weather
+        # WEATHER
 
-        weather = get_weather(destination)
+        weather = get_weather(
+            destination
+        )
 
 
         if weather:
+
 
             st.subheader(
                 "🌦 Weather"
             )
 
 
-            c1, c2, c3 = st.columns(3)
+            c1,c2,c3 = st.columns(3)
 
 
             c1.metric(
@@ -211,7 +246,7 @@ with right:
 
 
 
-        # AI ITINERARY
+        # AI GENERATION
 
         with st.spinner(
             "✈️ Creating your itinerary..."
@@ -233,15 +268,7 @@ with right:
 
 
 
-        # ==========================
-        # FIX LINE BREAKS HERE
-        # ==========================
-
-        formatted_itinerary = itinerary.replace(
-            "\n",
-            "<br><br>"
-        )
-
+        # DISPLAY
 
 
         st.subheader(
@@ -249,12 +276,11 @@ with right:
         )
 
 
-
         st.markdown(
             f"""
 <div class="travel-card">
 
-{formatted_itinerary}
+{itinerary}
 
 </div>
 """,
@@ -268,6 +294,7 @@ with right:
 
 
         # MAP
+
 
         st.subheader(
             "🗺️ Explore Destination"
@@ -291,6 +318,7 @@ with right:
 
 
         # PDF
+
 
         pdf_file = create_pdf(
             itinerary
@@ -319,6 +347,7 @@ with right:
 
 
         # SUMMARY
+
 
         st.subheader(
             "📌 Trip Summary"
