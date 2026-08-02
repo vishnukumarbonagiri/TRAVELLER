@@ -11,7 +11,7 @@ from maps import create_map_link
 # ==========================================
 
 st.set_page_config(
-    page_title="TRAVELLER",
+    page_title="THETRAVELLER",
     page_icon="🌍",
     layout="wide"
 )
@@ -57,10 +57,10 @@ st.image(
 )
 
 
-st.markdown("# 🌍 Welcome to TRAVELLER")
+st.markdown("# 🌍 Welcome to THETRAVELLER")
 
 st.write(
-    "Plan smarter. Travel better with your AI-powered travel assistant."
+    "Plan smarter. Travel better with THETRAVELLER - your intelligent travel companion."
 )
 
 st.divider()
@@ -236,7 +236,7 @@ with right:
 
                 data=file,
 
-                file_name="TRAVELLER_itinerary.pdf",
+                file_name="THETRAVELLER_itinerary.pdf",
 
                 mime="application/pdf"
 
