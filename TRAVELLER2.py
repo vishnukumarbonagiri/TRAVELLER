@@ -1,4 +1,6 @@
 import streamlit as st
+import re
+
 from weather import get_weather
 from pexels import get_destination_image
 from ai_engine import generate_itinerary
@@ -42,8 +44,67 @@ st.markdown("""
     background:#005f87;
 }
 
+
+.travel-card{
+
+    background:white;
+    color:#222;
+    padding:30px;
+    border-radius:20px;
+    border-left:8px solid #0077b6;
+    font-size:18px;
+    line-height:1.7;
+
+}
+
 </style>
 """, unsafe_allow_html=True)
+
+
+
+# ==========================================
+# CLEAN AI RESPONSE
+# ==========================================
+
+def clean_response(text):
+
+    # remove html tags
+    text = re.sub(
+        r"<[^>]*>",
+        "",
+        text
+    )
+
+    # remove markdown
+    text = text.replace("#","")
+
+    return text.strip()
+
+
+
+# ==========================================
+# HEADER
+# ==========================================
+
+st.markdown(
+"""
+<h1 style='text-align:center;color:#0077b6;'>
+🌍 THETRAVELLER
+</h1>
+""",
+unsafe_allow_html=True
+)
+
+
+st.markdown(
+"""
+<p style='text-align:center;font-size:22px;'>
+✈️ Your intelligent travel companion<br>
+Plan smarter • Explore better • Discover more
+</p>
+""",
+unsafe_allow_html=True
+)
 
 
 
@@ -57,26 +118,20 @@ st.image(
 )
 
 
-st.markdown("# 🌍 Welcome to THETRAVELLER")
-
-st.write(
-    "Plan smarter. Travel better with THETRAVELLER - your intelligent travel companion."
-)
-
 st.divider()
 
 
 
 # ==========================================
-# MAIN LAYOUT
+# MAIN AREA
 # ==========================================
 
-left, right = st.columns([1,2])
+left,right = st.columns([1,2])
 
 
 
 # ==========================================
-# LEFT PANEL
+# LEFT SIDE
 # ==========================================
 
 with left:
@@ -86,15 +141,15 @@ with left:
 
     destination = st.text_input(
         "📍 Destination",
-        placeholder="Paris"
+        placeholder="Dubai"
     )
 
 
     days = st.number_input(
         "📅 Number of Days",
-        min_value=1,
-        max_value=30,
-        value=5
+        1,
+        30,
+        5
     )
 
 
@@ -117,10 +172,11 @@ with left:
 
 
 # ==========================================
-# RIGHT PANEL
+# RIGHT SIDE
 # ==========================================
 
 with right:
+
 
     if generate:
 
@@ -128,6 +184,7 @@ with right:
         # IMAGE
 
         image = get_destination_image(destination)
+
 
         if image:
 
@@ -149,29 +206,30 @@ with right:
             st.subheader("🌦 Current Weather")
 
 
-            w1,w2,w3 = st.columns(3)
+            a,b,c = st.columns(3)
 
 
-            w1.metric(
+            a.metric(
                 "🌡 Temperature",
                 f"{weather['main']['temp']}°C"
             )
 
 
-            w2.metric(
+            b.metric(
                 "💧 Humidity",
                 f"{weather['main']['humidity']}%"
             )
 
 
-            w3.metric(
+            c.metric(
                 "💨 Wind",
                 f"{weather['wind']['speed']} m/s"
             )
 
 
             st.write(
-                f"Condition: {weather['weather'][0]['description'].title()}"
+                "Condition:",
+                weather["weather"][0]["description"].title()
             )
 
 
@@ -179,9 +237,11 @@ with right:
 
 
 
-        # AI ITINERARY
+        # AI
 
-        with st.spinner("✈️ Creating your travel itinerary..."):
+        with st.spinner(
+            "✈️ Creating your travel itinerary..."
+        ):
 
             itinerary = generate_itinerary(
                 destination,
@@ -191,12 +251,26 @@ with right:
             )
 
 
-        st.subheader("🧳 AI Travel Itinerary")
+
+        cleaned = clean_response(itinerary)
 
 
-        with st.container(border=True):
 
-            st.markdown(itinerary)
+        st.subheader(
+            "🧳 AI Travel Itinerary"
+        )
+
+
+        st.markdown(
+            f"""
+            <div class="travel-card">
+
+            {cleaned.replace(chr(10),"<br>")}
+
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 
 
@@ -204,9 +278,11 @@ with right:
 
 
 
-        # GOOGLE MAPS
+        # MAP
 
-        st.subheader("🗺️ Explore Destination")
+        st.subheader(
+            "🗺️ Explore Destination"
+        )
 
 
         map_link = create_map_link(destination)
@@ -223,16 +299,17 @@ with right:
 
 
 
-        # PDF DOWNLOAD
+        # PDF
 
-        pdf_file = create_pdf(itinerary)
+        pdf_file = create_pdf(cleaned)
 
 
         with open(pdf_file,"rb") as file:
 
+
             st.download_button(
 
-                label="📄 Download Itinerary PDF",
+                "📄 Download THETRAVELLER PDF",
 
                 data=file,
 
@@ -250,31 +327,33 @@ with right:
 
         # SUMMARY
 
-        st.subheader("📌 Trip Summary")
+        st.subheader(
+            "📌 Trip Summary"
+        )
 
 
-        c1,c2,c3,c4 = st.columns(4)
+        x1,x2,x3,x4 = st.columns(4)
 
 
-        c1.metric(
+        x1.metric(
             "📍 Destination",
             destination
         )
 
 
-        c2.metric(
+        x2.metric(
             "📅 Days",
             days
         )
 
 
-        c3.metric(
+        x3.metric(
             "💰 Budget",
             budget
         )
 
 
-        c4.metric(
+        x4.metric(
             "🎯 Interests",
             interests
         )
