@@ -2,51 +2,32 @@ import streamlit as st
 import re
 
 
-def clean_ai_text(text):
-
-    # Remove unwanted html tags from AI output
-    text = re.sub(r"<br\s*/?>", "\n", text)
-
-    # Remove remaining HTML tags
-    text = re.sub(r"<[^>]*>", "", text)
-
-    # Convert markdown headings nicely
-    text = text.replace("###", "")
-    text = text.replace("##", "")
-    text = text.replace("#", "")
-
-    return text.strip()
-
-
-
 def show_itinerary_card(itinerary):
 
-    itinerary = clean_ai_text(itinerary)
+    # remove html tags
+    itinerary = re.sub(r"<.*?>", "", itinerary)
+
+    # clean markdown
+    itinerary = itinerary.replace("#", "")
+
+    # fix br tags
+    itinerary = itinerary.replace("<br>", "\n")
+
+    itinerary = itinerary.strip()
 
 
     st.markdown(
         """
         <style>
 
-        .travel-card {
-
+        .travel-box {
             background:white;
-            color:#222;
-            padding:35px;
+            padding:30px;
             border-radius:20px;
             border-left:8px solid #0077b6;
-            box-shadow:0px 5px 20px rgba(0,0,0,0.08);
+            color:#222;
             font-size:18px;
             line-height:1.8;
-
-        }
-
-        .travel-card h1,
-        .travel-card h2,
-        .travel-card h3 {
-
-            color:#0077b6;
-
         }
 
         </style>
@@ -55,13 +36,15 @@ def show_itinerary_card(itinerary):
     )
 
 
-    st.markdown(
-        f"""
-        <div class="travel-card">
+    with st.container():
 
-        {itinerary.replace(chr(10), "<br>")}
+        st.markdown(
+            f"""
+            <div class="travel-box">
 
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            {itinerary}
+
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
