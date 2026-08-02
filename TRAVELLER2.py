@@ -156,7 +156,10 @@ with right:
 
         st.subheader("🧳 AI Travel Itinerary")
 
-        st.write(itinerary)
+        st.markdown(
+            itinerary,
+            unsafe_allow_html=True
+        )
 
 
         st.divider()

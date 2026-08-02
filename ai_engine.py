@@ -2,47 +2,86 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 
+
+# Load environment variables
 load_dotenv()
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+# Create Groq client
+client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
 
 def generate_itinerary(destination, days, budget, interests):
 
     prompt = f"""
-Create a detailed travel itinerary.
+Create a beautiful travel itinerary.
 
-Destination: {destination}
-Days: {days}
-Budget: {budget}
-Interests: {interests}
+Use Markdown formatting.
+Use headings, emojis, and clear sections.
 
-Include the following format:
+Trip Details:
 
-🗓️ Day-wise itinerary
+📍 Destination: {destination}
 
-For each day include:
+📅 Number of Days: {days}
 
-## Day 1
-🏛️ Attractions:
+💰 Budget: {budget}
+
+🎯 Interests: {interests}
+
+
+Create the itinerary in this format:
+
+
+# 🗓️ Day 1
+
+## 🏛️ Attractions
 - Places to visit
+- Things to experience
 
-🍽️ Food:
-- Restaurants and local dishes
 
-🏨 Hotel:
+## 🍽️ Food
+- Restaurants
+- Local dishes to try
+
+
+## 🏨 Hotel
 - Hotel suggestions
+- Area to stay
 
-🚗 Transportation:
+
+## 🚗 Transportation
 - How to move around
+
+
+Repeat the same format for all days.
 
 
 Also include:
 
-💰 Estimated Budget
 
-💡 Travel Tips
+# 💰 Estimated Budget
+
+Provide approximate costs for:
+- Hotels
+- Food
+- Transportation
+- Activities
+
+
+# 💡 Travel Tips
+
+Include:
+- Safety tips
+- Best time to visit
+- Local advice
+- Things to avoid
+
+Make it detailed, practical, and easy for a traveler to follow.
 """
+
 
     response = client.chat.completions.create(
 
@@ -56,5 +95,6 @@ Also include:
         model="llama-3.3-70b-versatile"
 
     )
+
 
     return response.choices[0].message.content
