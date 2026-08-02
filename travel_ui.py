@@ -4,16 +4,18 @@ import re
 
 def clean_ai_text(text):
 
-    # Remove ALL HTML tags
+    # Remove unwanted html tags from AI output
+    text = re.sub(r"<br\s*/?>", "\n", text)
+
+    # Remove remaining HTML tags
     text = re.sub(r"<[^>]*>", "", text)
 
-    # Remove markdown symbols
+    # Convert markdown headings nicely
+    text = text.replace("###", "")
+    text = text.replace("##", "")
     text = text.replace("#", "")
 
-    # Remove extra spaces
-    text = text.strip()
-
-    return text
+    return text.strip()
 
 
 
@@ -28,25 +30,24 @@ def show_itinerary_card(itinerary):
 
         .travel-card {
 
-            background:#ffffff;
-            color:#222222;
+            background:white;
+            color:#222;
             padding:35px;
             border-radius:20px;
             border-left:8px solid #0077b6;
+            box-shadow:0px 5px 20px rgba(0,0,0,0.08);
             font-size:18px;
-            line-height:1.7;
+            line-height:1.8;
 
         }
 
-
-        .travel-title {
+        .travel-card h1,
+        .travel-card h2,
+        .travel-card h3 {
 
             color:#0077b6;
-            font-size:32px;
-            font-weight:bold;
 
         }
-
 
         </style>
         """,
