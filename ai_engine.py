@@ -12,6 +12,51 @@ client = Groq(
 
 
 
+def format_itinerary(text):
+
+    # Force line breaks after important sections
+
+    sections = [
+        "🌍",
+        "🏨",
+        "🍴",
+        "📅",
+        "🚗",
+        "💡",
+        "💰",
+        "Trip Details"
+    ]
+
+
+    for section in sections:
+        text = text.replace(
+            section,
+            "\n\n" + section
+        )
+
+
+    # Fix common labels
+
+    text = text.replace(
+        "Morning:",
+        "\nMorning:"
+    )
+
+    text = text.replace(
+        "Afternoon:",
+        "\nAfternoon:"
+    )
+
+    text = text.replace(
+        "Evening:",
+        "\nEvening:"
+    )
+
+
+    return text.strip()
+
+
+
 def generate_itinerary(destination, days, budget, interests):
 
 
@@ -19,20 +64,17 @@ def generate_itinerary(destination, days, budget, interests):
 
 You are a professional travel planner.
 
-Create a detailed travel itinerary.
+Create a travel itinerary.
 
-IMPORTANT RULES:
+RULES:
 
-- Use plain text only.
-- Do NOT use HTML.
-- Do NOT use <br>.
-- Do NOT write paragraphs.
-- Use clear line breaks.
-- Use headings and bullet points.
+- Plain text only.
+- Use many line breaks.
+- Never create a paragraph.
+- Use headings.
+- Use bullet points.
 
-
-FORMAT EXACTLY:
-
+Format:
 
 🌍 {destination} Travel Plan
 
@@ -115,4 +157,11 @@ Interests: {interests}
     )
 
 
-    return response.choices[0].message.content
+    result = response.choices[0].message.content
+
+
+    # IMPORTANT FIX
+    result = format_itinerary(result)
+
+
+    return result
