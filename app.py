@@ -4,7 +4,6 @@ import re
 from ai_engine import generate_itinerary
 from pexels import get_destination_image
 from weather import get_weather
-from maps import create_map_link
 from pdf_generator import create_pdf
 
 
@@ -52,7 +51,6 @@ unsafe_allow_html=True
 
 def clean_ai_text(text):
 
-    # Convert HTML breaks into real line breaks
     text = re.sub(
         r"<br\s*/?>",
         "\n",
@@ -60,34 +58,20 @@ def clean_ai_text(text):
         flags=re.IGNORECASE
     )
 
-
-    # Remove remaining HTML tags
     text = re.sub(
         r"<[^>]+>",
         "",
         text
     )
 
+    text = text.replace("###", "")
+    text = text.replace("**", "")
 
-    # Remove markdown symbols
-    text = text.replace(
-        "###",
-        ""
-    )
-
-    text = text.replace(
-        "**",
-        ""
-    )
-
-
-    # Remove extra empty lines
     text = re.sub(
         r"\n\s*\n\s*\n+",
         "\n\n",
         text
     )
-
 
     return text.strip()
 
@@ -96,7 +80,6 @@ def clean_ai_text(text):
 # ==========================
 # HEADER
 # ==========================
-
 
 st.markdown(
 """
@@ -121,9 +104,13 @@ st.image(
     use_container_width=True
 )
 
+
+
 st.markdown("## ✨ Why Choose THETRAVELLER?")
 
+
 c1, c2, c3 = st.columns(3)
+
 
 with c1:
     st.info("""
@@ -134,6 +121,7 @@ based on your interests,
 budget and trip duration.
 """)
 
+
 with c2:
     st.info("""
 ### 🌦 Live Weather
@@ -142,6 +130,7 @@ Know the current weather
 before planning your trip.
 """)
 
+
 with c3:
     st.info("""
 ### 📄 Instant PDF
@@ -149,8 +138,6 @@ with c3:
 Download your travel plan
 as a beautiful PDF.
 """)
-
-st.divider()
 
 
 st.divider()
@@ -170,7 +157,6 @@ left, right = st.columns([1,2])
 # ==========================
 
 with left:
-
 
     st.subheader(
         "🧳 Plan Your Trip"
@@ -209,7 +195,6 @@ with left:
 
 
 
-
 # ==========================
 # RIGHT OUTPUT
 # ==========================
@@ -245,7 +230,6 @@ with right:
 
 
         if weather:
-
 
             st.subheader(
                 "🌦 Weather"
@@ -292,7 +276,6 @@ with right:
             )
 
 
-
         itinerary = clean_ai_text(
             raw_itinerary
         )
@@ -300,7 +283,6 @@ with right:
 
 
         # DISPLAY
-
 
         st.subheader(
             "🧳 AI Travel Itinerary"
@@ -324,7 +306,9 @@ with right:
 
 
 
-        # MAP
+        # ==========================
+        # EMBEDDED GOOGLE MAP
+        # ==========================
 
 
         st.subheader(
@@ -332,14 +316,21 @@ with right:
         )
 
 
-        map_link = create_map_link(
-            destination
-        )
+        map_url = f"https://www.google.com/maps?q={destination}&output=embed"
 
 
-        st.link_button(
-            "Open Google Maps 📍",
-            map_link
+        st.components.v1.html(
+            f"""
+            <iframe
+                src="{map_url}"
+                width="100%"
+                height="450"
+                style="border:0;border-radius:15px;"
+                allowfullscreen=""
+                loading="lazy">
+            </iframe>
+            """,
+            height=450
         )
 
 
