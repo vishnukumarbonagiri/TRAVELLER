@@ -121,6 +121,37 @@ st.image(
     use_container_width=True
 )
 
+st.markdown("## ✨ Why Choose THETRAVELLER?")
+
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.info("""
+### 🤖 AI Travel Planner
+
+Generate personalized itineraries
+based on your interests,
+budget and trip duration.
+""")
+
+with c2:
+    st.info("""
+### 🌦 Live Weather
+
+Know the current weather
+before planning your trip.
+""")
+
+with c3:
+    st.info("""
+### 📄 Instant PDF
+
+Download your travel plan
+as a beautiful PDF.
+""")
+
+st.divider()
+
 
 st.divider()
 

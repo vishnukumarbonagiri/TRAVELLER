@@ -15,9 +15,9 @@ load_dotenv()
 # GET GROQ API KEY
 # ==========================
 
-if "GROQ_API_KEY" in st.secrets:
+try:
     GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
-else:
+except Exception:
     GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 
