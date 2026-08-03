@@ -39,13 +39,13 @@ def clean_itinerary(text):
     text = text.replace("<br />", "\n")
 
 
-    # Remove markdown symbols
+    # Remove markdown
     text = text.replace("###", "")
     text = text.replace("**", "")
     text = text.replace("`", "")
 
 
-    # Fix budget formatting
+    # Fix spacing
 
     text = text.replace(
         "Accommodation:",
@@ -73,11 +73,11 @@ def clean_itinerary(text):
     )
 
 
-    # Fix average spacing
+    # Fix average word
 
     text = text.replace(
         "(avg.",
-        "(avg. "
+        "(average "
     )
 
 
@@ -105,24 +105,23 @@ def generate_itinerary(destination, days, budget, interests):
 
 You are a professional travel planner.
 
-Create a detailed travel itinerary.
+Create a travel itinerary.
+
 
 IMPORTANT RULES:
 
 - Plain text only.
-- Never use HTML.
-- Never use <br>.
-- Never use backticks (`).
-- Never wrap numbers or prices in code formatting.
-- Do not create long paragraphs.
+- No HTML.
+- No <br>.
+- No backticks.
+- No markdown tables.
+- No code formatting.
 - Use headings.
 - Use bullet points.
 - Keep clean spacing.
-- Output must be normal readable text that can be directly displayed in a travel app.
 
 
-
-FORMAT:
+Create this structure:
 
 
 🌍 {destination} Travel Plan
@@ -153,7 +152,6 @@ Evening:
 - Activity
 
 
-
 📅 DAY 2
 
 Morning:
@@ -164,7 +162,6 @@ Afternoon:
 
 Evening:
 - Activity
-
 
 
 📅 DAY 3
@@ -179,32 +176,77 @@ Evening:
 - Activity
 
 
-
 🚗 TRANSPORTATION
 
--
+- Transport options
 
 
 💡 TRAVEL TIPS
 
--
+- Tips
+
 
 
 💰 ESTIMATED BUDGET
 
+
 Accommodation:
+Amount: 
+Details:
+
+
 Food:
+Amount:
+Details:
+
+
 Transportation:
+Amount:
+Details:
+
+
 Activities:
+Amount:
+Details:
+
+
 Total:
+Amount:
 
 
-Trip Details:
+STRICT BUDGET RULES:
 
-Destination: {destination}
-Days: {days}
-Budget: {budget}
-Interests: {interests}
+- Amount and Details must be on separate lines.
+- Never use avg.
+- Never combine categories.
+- Never mix currencies.
+- Use the user's budget currency.
+- Keep realistic costs.
+
+
+
+TRIP DETAILS:
+
+Destination:
+{destination}
+
+Days:
+{days}
+
+User Budget:
+{budget}
+
+
+User Interests:
+{interests}
+
+
+IMPORTANT:
+
+- Use ONLY the user's interests.
+- Do not add new interests.
+- Do not assume hobbies.
+- If user enters Food, only focus on food experiences.
 
 
 """
@@ -221,15 +263,13 @@ Interests: {interests}
             }
         ],
 
-        temperature=0
+        temperature=0.1
 
     )
 
 
     result = response.choices[0].message.content
 
-
-    # Apply formatting cleanup
 
     result = clean_itinerary(result)
 
