@@ -51,22 +51,33 @@ unsafe_allow_html=True
 
 def clean_ai_text(text):
 
-    text = re.sub(
-        r"<br\s*/?>",
-        "\n",
-        text,
-        flags=re.IGNORECASE
-    )
+    import re
 
-    text = re.sub(
-        r"<[^>]+>",
-        "",
-        text
-    )
+    # Remove HTML
+    text = re.sub(r"<[^>]+>", "", text)
 
+    # Remove markdown symbols
     text = text.replace("###", "")
     text = text.replace("**", "")
+    text = text.replace("`", "")
 
+    # Add spacing before budget sections
+    sections = [
+        "Accommodation:",
+        "Food:",
+        "Transportation:",
+        "Activities:",
+        "Total:",
+        "Trip Details:"
+    ]
+
+    for section in sections:
+        text = text.replace(
+            section,
+            "\n\n" + section
+        )
+
+    # Fix bullet spacing
     text = re.sub(
         r"\n\s*\n\s*\n+",
         "\n\n",
@@ -77,9 +88,11 @@ def clean_ai_text(text):
 
 
 
+
 # ==========================
 # HEADER
 # ==========================
+
 
 st.markdown(
 """
@@ -106,13 +119,17 @@ st.image(
 
 
 
-st.markdown("## ✨ Why Choose THETRAVELLER?")
+st.markdown(
+"## ✨ Why Choose THETRAVELLER?"
+)
 
 
-c1, c2, c3 = st.columns(3)
+
+c1,c2,c3 = st.columns(3)
 
 
 with c1:
+
     st.info("""
 ### 🤖 AI Travel Planner
 
@@ -123,6 +140,7 @@ budget and trip duration.
 
 
 with c2:
+
     st.info("""
 ### 🌦 Live Weather
 
@@ -132,6 +150,7 @@ before planning your trip.
 
 
 with c3:
+
     st.info("""
 ### 📄 Instant PDF
 
@@ -148,7 +167,7 @@ st.divider()
 # MAIN LAYOUT
 # ==========================
 
-left, right = st.columns([1,2])
+left,right = st.columns([1,2])
 
 
 
@@ -157,6 +176,7 @@ left, right = st.columns([1,2])
 # ==========================
 
 with left:
+
 
     st.subheader(
         "🧳 Plan Your Trip"
@@ -193,9 +213,7 @@ with left:
         "🚀 Generate Travel Plan"
     )
 
-
-
-# ==========================
+    # ==========================
 # RIGHT OUTPUT
 # ==========================
 
@@ -205,7 +223,9 @@ with right:
     if generate:
 
 
-        # IMAGE
+        # ==========================
+        # DESTINATION IMAGE
+        # ==========================
 
         image = get_destination_image(
             destination
@@ -222,7 +242,9 @@ with right:
 
 
 
+        # ==========================
         # WEATHER
+        # ==========================
 
         weather = get_weather(
             destination
@@ -261,7 +283,9 @@ with right:
 
 
 
-        # AI GENERATION
+        # ==========================
+        # AI ITINERARY
+        # ==========================
 
         with st.spinner(
             "✈️ Creating your itinerary..."
@@ -281,8 +305,6 @@ with right:
         )
 
 
-
-        # DISPLAY
 
         st.subheader(
             "🧳 AI Travel Itinerary"
@@ -307,16 +329,17 @@ with right:
 
 
         # ==========================
-        # EMBEDDED GOOGLE MAP
+        # GOOGLE MAP
         # ==========================
-
 
         st.subheader(
             "🗺️ Explore Destination"
         )
 
 
-        map_url = f"https://www.google.com/maps?q={destination}&output=embed"
+        map_url = (
+            f"https://www.google.com/maps?q={destination}&output=embed"
+        )
 
 
         st.components.v1.html(
@@ -339,8 +362,9 @@ with right:
 
 
 
-        # PDF
-
+        # ==========================
+        # PDF DOWNLOAD
+        # ==========================
 
         pdf_file = create_pdf(
             itinerary
@@ -368,8 +392,9 @@ with right:
 
 
 
+        # ==========================
         # SUMMARY
-
+        # ==========================
 
         st.subheader(
             "📌 Trip Summary"

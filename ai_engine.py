@@ -33,13 +33,47 @@ client = Groq(
 
 def clean_itinerary(text):
 
-    # Remove HTML tags
+    # Remove HTML
     text = text.replace("<br>", "\n")
     text = text.replace("<br/>", "\n")
     text = text.replace("<br />", "\n")
 
 
-    # Fix spacing problems
+    # Remove markdown symbols
+    text = text.replace("###", "")
+    text = text.replace("**", "")
+    text = text.replace("`", "")
+
+
+    # Fix budget formatting
+
+    text = text.replace(
+        "Accommodation:",
+        "\n\nAccommodation:"
+    )
+
+    text = text.replace(
+        "Food:",
+        "\n\nFood:"
+    )
+
+    text = text.replace(
+        "Transportation:",
+        "\n\nTransportation:"
+    )
+
+    text = text.replace(
+        "Activities:",
+        "\n\nActivities:"
+    )
+
+    text = text.replace(
+        "Total:",
+        "\n\nTotal:"
+    )
+
+
+    # Fix average spacing
 
     text = text.replace(
         "(avg.",
@@ -47,27 +81,16 @@ def clean_itinerary(text):
     )
 
 
-    text = text.replace(
-        "per night",
-        " per night"
-    )
-
-
-    text = text.replace(
-        "per day",
-        " per day"
-    )
-
-
     # Remove extra spaces
 
-    text = "\n".join(
-        line.strip()
-        for line in text.split("\n")
-    )
+    lines = []
+
+    for line in text.split("\n"):
+        if line.strip():
+            lines.append(line.strip())
 
 
-    return text.strip()
+    return "\n\n".join(lines)
 
 
 
@@ -89,10 +112,14 @@ IMPORTANT RULES:
 - Plain text only.
 - Never use HTML.
 - Never use <br>.
+- Never use backticks (`).
+- Never wrap numbers or prices in code formatting.
 - Do not create long paragraphs.
 - Use headings.
 - Use bullet points.
 - Keep clean spacing.
+- Output must be normal readable text that can be directly displayed in a travel app.
+
 
 
 FORMAT:
