@@ -28,13 +28,15 @@ st.markdown(
 
 .travel-card {
 
-background:white;
+background: linear-gradient(180deg, #ffffff, #f8fbff);
 color:#222;
-padding:35px;
-border-radius:20px;
-border-left:8px solid #0077b6;
+padding:30px;
+border-radius:18px;
+border:1px solid #dbeafe;
+box-shadow:0px 6px 18px rgba(0,0,0,0.08);
 font-size:18px;
-line-height:1.8;
+line-height:1.9;
+margin-bottom:20px;
 
 }
 
@@ -120,7 +122,16 @@ st.image(
 
 
 st.markdown(
-"## ✨ Why Choose THETRAVELLER?"
+"""
+<h2 style="text-align:center;color:#0077b6;">
+✨ Why Choose THETRAVELLER?
+</h2>
+
+<p style="text-align:center;font-size:18px;color:gray;">
+Everything you need to plan your perfect trip in one place.
+</p>
+""",
+unsafe_allow_html=True
 )
 
 
@@ -307,7 +318,7 @@ with right:
 
 
         st.subheader(
-            "🧳 AI Travel Itinerary"
+            "🧳 Your Personalized Travel Plan"
         )
 
 

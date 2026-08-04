@@ -126,54 +126,81 @@ Create this structure:
 
 🌍 {destination} Travel Plan
 
-
 🏨 RECOMMENDED HOTELS
 
-Hotel Name:
-Location:
-Price:
+🏨 Hotel:
+📍 Location:
+💶 Price:
+
+-------------------------
+
+🏨 Hotel:
+📍 Location:
+💶 Price:
 
 
 🍴 FOOD RECOMMENDATIONS
 
-Restaurant:
-Famous Food:
+🍴 Restaurant:
+⭐ Famous For:
+💶 Approx. Price:
+
+-------------------------
+
+🍴 Restaurant:
+⭐ Famous For:
+💶 Approx. Price:
 
 
+━━━━━━━━━━━━━━━━━━━━━━
 📅 DAY 1
+━━━━━━━━━━━━━━━━━━━━━━
 
-Morning:
-- Activity
+🌅 Morning
+• Activity 1
+• Activity 2
 
-Afternoon:
-- Activity
+☀️ Afternoon
+• Activity 1
+• Activity 2
 
-Evening:
-- Activity
+🌙 Evening
+• Activity 1
+• Activity 2
 
 
+━━━━━━━━━━━━━━━━━━━━━━
 📅 DAY 2
+━━━━━━━━━━━━━━━━━━━━━━
 
-Morning:
-- Activity
+🌅 Morning
+• Activity 1
+• Activity 2
 
-Afternoon:
-- Activity
+☀️ Afternoon
+• Activity 1
+• Activity 2
 
-Evening:
-- Activity
+🌙 Evening
+• Activity 1
+• Activity 2
 
 
+━━━━━━━━━━━━━━━━━━━━━━
 📅 DAY 3
+━━━━━━━━━━━━━━━━━━━━━━
 
-Morning:
-- Activity
+🌅 Morning
+• Activity 1
+• Activity 2
 
-Afternoon:
-- Activity
+☀️ Afternoon
+• Activity 1
+• Activity 2
 
-Evening:
-- Activity
+🌙 Evening
+• Activity 1
+• Activity 2
 
 
 🚗 TRANSPORTATION
@@ -189,30 +216,26 @@ Evening:
 
 💰 ESTIMATED BUDGET
 
-
-Accommodation:
-Amount: 
-Details:
-
-
-Food:
+🏨 Accommodation
 Amount:
 Details:
 
-
-Transportation:
+🍴 Food
 Amount:
 Details:
 
-
-Activities:
+🚕 Transportation
 Amount:
 Details:
 
-
-Total:
+🎟 Activities
 Amount:
+Details:
 
+━━━━━━━━━━━━━━━━━━━━━━
+💵 TOTAL
+Amount:
+━━━━━━━━━━━━━━━━━━━━━━
 
 STRICT BUDGET RULES:
 
