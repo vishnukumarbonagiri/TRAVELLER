@@ -152,55 +152,28 @@ Create this structure:
 💶 Approx. Price:
 
 
-━━━━━━━━━━━━━━━━━━━━━━
-📅 DAY 1
-━━━━━━━━━━━━━━━━━━━━━━
+Create a detailed day-by-day itinerary for EXACTLY {days} days.
 
-🌅 Morning
-• Activity 1
-• Activity 2
-
-☀️ Afternoon
-• Activity 1
-• Activity 2
-
-🌙 Evening
-• Activity 1
-• Activity 2
-
+For EACH day, use this format:
 
 ━━━━━━━━━━━━━━━━━━━━━━
-📅 DAY 2
+📅 DAY X
 ━━━━━━━━━━━━━━━━━━━━━━
 
 🌅 Morning
-• Activity 1
-• Activity 2
+• Activities
 
 ☀️ Afternoon
-• Activity 1
-• Activity 2
+• Activities
 
 🌙 Evening
-• Activity 1
-• Activity 2
+• Activities
 
+Continue until DAY {days}.
 
-━━━━━━━━━━━━━━━━━━━━━━
-📅 DAY 3
-━━━━━━━━━━━━━━━━━━━━━━
-
-🌅 Morning
-• Activity 1
-• Activity 2
-
-☀️ Afternoon
-• Activity 1
-• Activity 2
-
-🌙 Evening
-• Activity 1
-• Activity 2
+Do NOT stop early.
+Do NOT generate fewer than {days} days.
+Do NOT skip any day.
 
 
 🚗 TRANSPORTATION
